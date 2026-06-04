@@ -37,10 +37,9 @@ print(type(num))
 
 
 #17. Take a string input "100" and convert it to an int.
-a=int(input("100"))
-print(type(a))
-print(a)
-
+#a=int(input("100"))
+#print(type(a))
+#print(a)
 #Create a variable with a complex number and print only its real part.
 a=3+3j
 print(a.real)
@@ -51,7 +50,12 @@ paragraph="This is a sample paragraph to test the length of the string variable.
 print(len(paragraph))
 
 #20. Swap the values of two variables a and b without using a third variable.
-#a=4
-#b=2
-#print(a,b = b,a)
+a=4
+b=2
+print("before swapping:",a,b)
+a=a+b
+b=a-b
+a=a-b
+print("after swapping:",a,b)
+
 
