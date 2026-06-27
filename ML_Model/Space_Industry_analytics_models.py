@@ -15,7 +15,7 @@ print(df.head())
 print(df.info())
 print(df.info())
 print(df.shape)
-print(df.describe)
+print(df.describe())
 
 #NUmerical analysis using numpy
 revenue = df['Revenue_USD_M'].to_numpy()
@@ -50,7 +50,7 @@ print(performance)
 3-Trends
 4-Distribution of each variable
 5-Variables that may strongly influence (revenue)''' 
-
+#random pair plot for all numeric values
 numeric_cols = [
     "Launches",
     "Successful",
@@ -67,13 +67,28 @@ sns.pairplot(
     df[numeric_cols],
     diag_kind='kde'
 )
+#pairplot
+plt.show() 
 
-plt.show()  ##working with numeric cols for a gernel overview now i find some  useful coloreation b/w cols
+
+sns.pairplot(
+    df,
+    vars=[
+        "Launches",
+        "Budget_Funding_USD_M",
+        "Employees",
+        "Rockets",
+        "Revenue_USD_M"
+    ],
+    hue="Company",
+    diag_kind="kde"
+)
+
+plt.show() ##working with numeric cols for a gernel overview now i find some  useful coloreation b/w cols
 
 
 #heatmap co-relation analysis
 plt.figure(figsize=(10,8))
-
 sns.heatmap(
     df.corr(numeric_only=True),
     annot=True,
@@ -91,7 +106,7 @@ failure = df["Failed"].sum()
 plt.pie(
     [success,failure],
     labels=["Success","Failure"],
-    autopct='%1.1f%%'
+    autopct='%1.2f%%'
 )
 
 plt.title("Mission Success Analysis")
@@ -144,3 +159,51 @@ model.fit(X_train,y_train)
 predictions=model.predict(X_test)
 
 print(predictions)
+
+#start with new 
+#Classification: Predict Success Category
+import numpy as np
+
+
+df["Category"] = np.where(
+    df["Success_Rate_%"]>90,
+    1,
+    0
+)
+
+from sklearn.ensemble import RandomForestClassifier
+#train model for Classification
+y = df["Category"]
+X = df[
+[
+"Launches","Budget_Funding_USD_M","Employees","Rockets"]]
+
+#modeling
+model = RandomForestClassifier()
+
+model.fit(X,y)
+
+#test-train-predict classification
+
+from sklearn.model_selection import train_test_split
+
+X_train,X_test,y_train,y_test = train_test_split(X,y,test_size=0.2,random_state=42)
+
+model = RandomForestClassifier()
+
+model.fit(X_train,y_train)
+
+pred=model.predict(X_test)
+
+#clustring 
+#from sklearn.cluster import KMeans
+
+from sklearn.cluster import KMeans
+X=df[["Launches","Revenue_USD_M","Employees"]]
+
+kmeans=KMeans(n_clusters=3)
+
+df["Cluster"]=kmeans.fit_predict(X)
+
+print(df[["Company","Cluster"]])
+
